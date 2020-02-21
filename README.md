@@ -37,7 +37,10 @@ Keep in mind that there are some requirements on the function that you have to f
     ```
     $this->crud->DeleteData('<table name>', '<where condition>', '<where value>');
     ```
-4. 
+4. If you want to Read a data, just add the table name on the function.
+    ```
+    $this->crud->ReadData('<table name>');
+    ```
     ***Notice : Do it all without the left and right angle bracket, and also no spacing.***
 
 The Developer
