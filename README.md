@@ -1,4 +1,4 @@
-# CI-CRUD-Template
+# CI-CRUD_Model-Template
 A CodeIgniter model template provided for the developers when they want to interact with database and perform data manipulation.
 
 Intro
