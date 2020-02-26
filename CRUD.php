@@ -178,7 +178,7 @@ class CRUD extends CI_Model{
             throw new Error('The table name cannot be empty!');
         }
         // If where condition is empty, then it will throw an error.
-        elseif(empty($where) || empty($id)){
+        elseif(empty($where)){
             throw new Error('Where condition cannot be empty!');
         }
         // Else, just do normal process.
