@@ -22,7 +22,7 @@ class CRUD extends CI_Model{
      * @param array $data
      * The value and the field name of the table.
      * 
-     * @return boolean
+     * @return $query
      * 
      */
     function AddData($table, $data = array()){
@@ -37,18 +37,14 @@ class CRUD extends CI_Model{
         // Else, just do a normal process.
         else{
             // Inserting the data to the table.
-            $query = $this->db->insert($table, $data);
-            // Get the affected rows after insert operation.
+            $query = $this->db->insert_batch($table, $data);
+            # insert_batch() allows you to insert data with more than 1 values without cycle.
+
+            // Fetching the affected rows.
             $query = $this->db->affected_rows();
-    
-            // If the number of the affected row is more than 0, then return TRUE.
-            if($query > 0){
-                return true;
-            }
-            // Else, the operation is failed and return FALSE.
-            else{
-                return false;
-            }
+
+            // Returning $query
+            return $query;
         }
     }
 
@@ -69,12 +65,48 @@ class CRUD extends CI_Model{
             throw new Error('The table name cannot be empty!');
         }
         else{
-            // Set the table destination
+            // Set the table destination.
             $query = $this->db->from($table);
             // Retrieving data from the table.
             $query = $this->db->get();
+
+            // Returning the data result as an object.
+            return $query->result();
     
-            // Returning the data.
+        }
+    }
+
+    /** Read Data Where Function
+     * 
+     * This is a Select Where function to MySQL. This function is provided to
+     * do a select where operation on your program.
+     * 
+     * @param string $table
+     * The table name on your database.
+     * 
+     * @param array $where
+     * The condition and the value of itself for the operation.
+     * 
+     * @return $query
+     * 
+     */
+    function ReadDataWhere($table, $where = array()){
+        // If the table name is empty, then it will throw an error.
+        if(empty($table)){
+            throw new Error('The table name cannot be empty!');
+        }
+        // If where condition is empty, then it will throw an error.
+        elseif(empty($where)){
+            throw new Error('Where condition cannot be empty!');
+        }
+        // Else, just do normal process.
+        else{
+            // Set the where condition.
+            $query = $this->db->where($where);
+            // Retrieving data from the table.
+            $query = $this->db->get($table);
+    
+            // Returning the data result as an object.
             return $query->result();
         }
     }
@@ -90,14 +122,13 @@ class CRUD extends CI_Model{
      * @param array $data
      * The value and the field name of the table.
      * 
-     * @param string $where
-     * The condition for the operation.
+     * @param array $where
+     * The condition and the value of itself for the operation.
      * 
-     * @param string $id
-     * The value for the condition.
+     * @return $query
      * 
      */
-    function UpdateData($table, $data = array(), $where, $id){
+    function UpdateData($table, $data = array(), $where = array()){
         // If the table name is empty, then it will throw an error.
         if(empty($table)){
             throw new Error('The table name cannot be empty!');
@@ -111,25 +142,19 @@ class CRUD extends CI_Model{
             throw new Error('The data you enter is not an array data type!');
         }
         // If where condition is empty, then it will throw an error.
-        elseif(empty($where) || empty($id)){
+        elseif(empty($where)){
             throw new Error('Where condition cannot be empty!');
         }
         // Else, just do normal process.
         else{
             // Set the table destination along with the condition, and then
             // updating the specified data.
-            $query = $this->db->where($where, $id)->update($table, $data);
-            // Get the affected rows after update operation.
+            $query = $this->db->where($where)->update($table, $data);
+            // Fetching the affected rows.
             $query = $this->db->affected_rows();
-    
-            // If the number of the affected row is more than 0, then return TRUE.
-            if($query > 0){
-                return true;
-            }
-            // Else, the operation is failed and return FALSE.
-            else{
-                return false;
-            }
+
+            // Returning $query
+            return $query;
         }
     }
 
@@ -141,14 +166,13 @@ class CRUD extends CI_Model{
      * @param string $table
      * The table name on your database.
      * 
-     * @param string $where
-     * The condition for the operation.
+     * @param array $where
+     * The condition and the value of itself for the operation.
      * 
-     * @param string $id
-     * The value for the condition.
+     * @return $query
      * 
      */
-    function DeleteData($table, $where, $id){
+    function DeleteData($table, $where = array()){
         // If the table name is empty, then it will throw an error.
         if(empty($table)){
             throw new Error('The table name cannot be empty!');
@@ -161,18 +185,13 @@ class CRUD extends CI_Model{
         else{
             // Set the table destination along with the condition, and then
             // deleting the specified data.
-            $query = $this->db->where($where, $id)->delete($table);
-            // Get the affected rows after update operation.
+            $query = $this->db->where($where)->delete($table);
+
+            // Fetching the affected rows.
             $query = $this->db->affected_rows();
-    
-            // If the number of the affected row is more than 0, then return TRUE.
-            if($query > 0){
-                return true;
-            }
-            // Else, the operation is failed and return FALSE.
-            else{
-                return false;
-            }
+
+            // Returning $query
+            return $query;
         }
     }
 }
